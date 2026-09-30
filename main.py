@@ -30,6 +30,8 @@ from tkinter import filedialog, messagebox, ttk
 from PIL import Image, ImageDraw, ImageTk
 
 APP_TITLE = "Transcriptor de audio"
+APP_VERSION = "0.1.0"  # build.py la usa para los metadatos del .exe
+APP_AUTHOR = "IngSystemCix"
 FONT = ("Segoe UI", 11)
 FONT_BOLD = ("Segoe UI", 11, "bold")
 FONT_SMALL = ("Segoe UI", 10)
@@ -295,11 +297,24 @@ def av_available() -> bool:
     return _AV_OK
 
 
+def _find_ffmpeg() -> str | None:
+    """Busca ffmpeg: empaquetado en el .exe, junto al .exe, o en el PATH."""
+    candidates = []
+    if getattr(sys, "frozen", False):
+        exe_name = "ffmpeg.exe" if os.name == "nt" else "ffmpeg"
+        candidates.append(Path(getattr(sys, "_MEIPASS", "")) / exe_name)
+        candidates.append(Path(sys.executable).parent / exe_name)
+    for c in candidates:
+        if c.is_file():
+            return str(c)
+    return shutil.which("ffmpeg")
+
+
 def decode_with_ffmpeg(path: str):
     """Audio -> float32 mono 16 kHz (lo que espera Whisper) usando ffmpeg.exe."""
     import numpy as np
 
-    exe = shutil.which("ffmpeg")
+    exe = _find_ffmpeg()
     if not exe:
         raise RuntimeError(
             "No se encontró ffmpeg en el PATH.\n"
@@ -541,7 +556,10 @@ class App(tk.Tk):
         titles.pack(side="left", padx=14)
         tk.Label(titles, text=APP_TITLE, bg=C.BG, fg=C.TEXT, font=FONT_TITLE).pack(anchor="w")
         tk.Label(titles, text="Convierte audio a texto sin conexión con faster-whisper", bg=C.BG, fg=C.MUTED, font=FONT_SMALL).pack(anchor="w")
-        tk.Label(header, text="Ctrl+O Abrir   ·   Ctrl+Enter Transcribir   ·   Esc Cancelar", bg=C.BG, fg=C.MUTED, font=FONT_SMALL).pack(side="right")
+        info = tk.Frame(header, bg=C.BG)
+        info.pack(side="right")
+        tk.Label(info, text="Ctrl+O Abrir   ·   Ctrl+Enter Transcribir   ·   Esc Cancelar", bg=C.BG, fg=C.MUTED, font=FONT_SMALL).pack(anchor="e")
+        tk.Label(info, text=f"v{APP_VERSION}  ·  Desarrollado por {APP_AUTHOR}", bg=C.BG, fg=C.MUTED, font=FONT_SMALL).pack(anchor="e", pady=(2, 0))
 
         # Panel izquierdo (3 grupos: regla de Miller)
         left = tk.Frame(self, bg=C.BG, width=380)
@@ -836,6 +854,9 @@ def _enable_dpi_awareness() -> None:
 
 
 def main() -> None:
+    for name in ("stdout", "stderr"):  # .exe --windowed: no hay consola
+        if getattr(sys, name) is None:
+            setattr(sys, name, open(os.devnull, "w", encoding="utf-8"))
     _enable_dpi_awareness()  # debe ir antes de crear la ventana
     App().mainloop()
 

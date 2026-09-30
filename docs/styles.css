@@ -5,6 +5,7 @@
   --font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.65 var(--font);-webkit-font-smoothing:antialiased}
 a{color:var(--accent-l)}

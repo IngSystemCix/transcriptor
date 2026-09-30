@@ -93,7 +93,10 @@ async function loadRelease() {
     if (!asset) return;
     $$("[data-download]").forEach((a) => (a.href = asset.browser_download_url));
     setText("size", fmtSize(asset.size));
-    setText("downloads", asset.download_count.toLocaleString("es"));
+    if (asset.download_count > 0) {
+      setText("downloads", asset.download_count.toLocaleString("es"));
+      $("#downloads-item").hidden = false;
+    }
     const hash = asset.digest?.replace(/^sha256:/, "");
     if (hash) {
       setText("hash", hash);

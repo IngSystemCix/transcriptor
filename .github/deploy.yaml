@@ -1,0 +1,84 @@
+name: Deploy
+
+# Compila para Windows, macOS y Linux y publica una Release con los tres archivos.
+#  - Al subir un tag (git tag v0.1.0 && git push --tags): compila y publica la Release.
+#  - Manualmente (Actions > Deploy > Run workflow): solo compila y deja los archivos como artefactos.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compilar ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false # si falla un sistema, los demás siguen
+      matrix:
+        include:
+          - os: windows-latest
+            label: Windows
+            asset: Transcriptor.exe
+          - os: macos-latest # Apple Silicon (arm64)
+            label: macOS
+            asset: Transcriptor-macos-arm64.zip
+          - os: ubuntu-22.04 # glibc antigua = más compatibilidad entre distribuciones
+            label: Linux
+            asset: Transcriptor-linux-x86_64.tar.gz
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Dependencias del sistema (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-tk tk-dev
+
+      # Usa la versión de Python fijada en .python-version y las dependencias de uv.lock
+      - name: Instalar dependencias
+        run: uv sync
+
+      - name: Compilar
+        run: uv run build.py
+
+      - name: Empaquetar
+        shell: bash
+        run: |
+          mkdir -p out
+          case "${{ runner.os }}" in
+            Windows) cp dist/Transcriptor.exe "out/${{ matrix.asset }}" ;;
+            macOS)   ditto -c -k --sequesterRsrc --keepParent dist/Transcriptor.app "out/${{ matrix.asset }}" ;;
+            Linux)   tar -czf "out/${{ matrix.asset }}" -C dist Transcriptor ;;
+          esac
+          ls -lh out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ runner.os }}
+          path: out/*
+          if-no-files-found: error
+
+  release:
+    name: Publicar Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # necesario para crear la Release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: build-*
+          merge-multiple: true
+          path: release
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Transcriptor ${{ github.ref_name }}
+          files: release/*
+          generate_release_notes: true
