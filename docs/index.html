@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transcriptor de audio · Convierte audio en texto sin conexión</title>
+  <meta name="description" content="Aplicación de escritorio para Windows que transcribe audio y video a texto de forma local con faster-whisper. Exporta a TXT y SRT.">
+  <meta name="theme-color" content="#0B1220">
+  <meta property="og:title" content="Transcriptor de audio">
+  <meta property="og:description" content="Convierte audio en texto sin salir de tu equipo. Gratis y sin conexión.">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+
+  <header class="header">
+    <div class="wrap header-in">
+      <a class="brand" href="#inicio" aria-label="Transcriptor de audio, inicio">
+        <span class="mark"><i class="ph-bold ph-waveform" aria-hidden="true"></i></span>Transcriptor
+      </a>
+      <button class="burger" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú">
+        <i class="ph-bold ph-list" aria-hidden="true"></i>
+      </button>
+      <nav id="nav" class="nav" aria-label="Principal">
+        <a href="#funciones">Funciones</a>
+        <a href="#descargar">Descarga</a>
+        <a href="#preguntas">Preguntas</a>
+        <a class="nav-gh" href="https://github.com/IngSystemCix/transcriptor" data-repo>
+          <i class="ph-bold ph-github-logo" aria-hidden="true"></i>GitHub
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section id="inicio" class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow"><i class="ph-fill ph-shield-check" aria-hidden="true"></i>100 % local · Sin suscripciones</p>
+          <h1>Convierte audio en texto, <span class="grad">sin salir de tu equipo</span></h1>
+          <p class="lead">Transcribe grabaciones, reuniones y videos con modelos Whisper que se ejecutan en tu computadora. Exporta a TXT o subtítulos SRT en un clic.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-download>
+              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>Descargar para Windows
+            </a>
+            <a class="btn btn-ghost" href="https://github.com/IngSystemCix/transcriptor" data-repo>
+              <i class="ph-bold ph-github-logo" aria-hidden="true"></i>Ver código
+            </a>
+          </div>
+          <ul class="chips" aria-label="Detalles de la última versión">
+            <li><i class="ph ph-tag" aria-hidden="true"></i><span data-version>Última versión</span></li>
+            <li><i class="ph ph-hard-drives" aria-hidden="true"></i><span data-size>Ejecutable portable</span></li>
+            <li><i class="ph ph-windows-logo" aria-hidden="true"></i>Windows 64 bits</li>
+          </ul>
+          <p class="os-note" id="os-note" hidden><i class="ph-fill ph-info" aria-hidden="true"></i>Este ejecutable es para Windows. En otros sistemas, ejecútalo desde el código (instrucciones en el repositorio).</p>
+        </div>
+
+        <div class="mock" role="img" aria-label="Vista previa de la aplicación transcribiendo un audio">
+          <div class="mock-bar"><i></i><i></i><i></i><span>Transcriptor de audio</span></div>
+          <div class="mock-body">
+            <div class="mock-side"><b></b><b></b><b></b><em><i class="ph-fill ph-play" aria-hidden="true"></i>Transcribir</em></div>
+            <div class="mock-text">
+              <p><span>00:04</span>Buenos días a todos, gracias por venir.</p>
+              <p><span>00:09</span>Hoy repasaremos los avances del trimestre.</p>
+              <p><span>00:15</span>Empecemos por los resultados de ventas.</p>
+              <p><span>00:21</span>Como pueden ver en la gráfica principal…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="funciones" class="section">
+      <div class="wrap">
+        <h2>Todo lo necesario para transcribir</h2>
+        <p class="sub">Simple de usar, potente por dentro.</p>
+        <div class="grid">
+          <article class="card reveal"><i class="ph-duotone ph-shield-check" aria-hidden="true"></i><h3>Privado y sin conexión</h3><p>Tus archivos nunca salen de tu equipo. Internet solo se usa una vez para descargar el modelo.</p></article>
+          <article class="card reveal"><i class="ph-duotone ph-brain" aria-hidden="true"></i><h3>Modelos a tu medida</h3><p>De <code>tiny</code> a <code>large-v3</code> y <code>turbo</code>: elige entre velocidad y precisión.</p></article>
+          <article class="card reveal"><i class="ph-duotone ph-translate" aria-hidden="true"></i><h3>Varios idiomas</h3><p>Detección automática o selección manual: español, inglés, portugués, francés, alemán e italiano.</p></article>
+          <article class="card reveal"><i class="ph-duotone ph-waveform" aria-hidden="true"></i><h3>Resultado en vivo</h3><p>El texto aparece segmento a segmento, con marcas de tiempo opcionales y cancelación en cualquier momento.</p></article>
+          <article class="card reveal"><i class="ph-duotone ph-subtitles" aria-hidden="true"></i><h3>Exporta como quieras</h3><p>Guarda en TXT, genera subtítulos SRT o copia el texto al portapapeles.</p></article>
+          <article class="card reveal"><i class="ph-duotone ph-keyboard" aria-hidden="true"></i><h3>Accesible</h3><p>Atajos de teclado, foco visible, contraste WCAG AA y botones cómodos de pulsar.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="descargar" class="section">
+      <div class="wrap">
+        <div class="dl reveal">
+          <div>
+            <h2>Descarga Transcriptor</h2>
+            <p class="sub">Un solo archivo <code>.exe</code>, sin instalación.</p>
+            <a class="btn btn-primary btn-lg" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-download>
+              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>Descargar <span data-version>última versión</span>
+            </a>
+            <a class="link" href="https://github.com/IngSystemCix/transcriptor/releases" data-releases>
+              Ver todas las versiones<i class="ph-bold ph-arrow-square-out" aria-hidden="true"></i>
+            </a>
+            <dl class="facts">
+              <div><dt><i class="ph ph-calendar-blank" aria-hidden="true"></i>Publicada</dt><dd data-date>—</dd></div>
+              <div><dt><i class="ph ph-hard-drives" aria-hidden="true"></i>Tamaño</dt><dd data-size>—</dd></div>
+              <div><dt><i class="ph ph-download" aria-hidden="true"></i>Descargas</dt><dd data-downloads>—</dd></div>
+            </dl>
+            <div class="hash" id="hash-row" hidden>
+              <span>SHA-256</span><code data-hash></code>
+              <button type="button" id="copy-hash" aria-label="Copiar SHA-256"><i class="ph-bold ph-copy" aria-hidden="true"></i></button>
+            </div>
+            <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
+          </div>
+          <div class="req">
+            <h3>Requisitos</h3>
+            <ul>
+              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Windows de 64 bits</li>
+              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Internet la primera vez que uses cada modelo</li>
+              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>GPU NVIDIA opcional (CUDA)</li>
+            </ul>
+            <p class="warn"><i class="ph-fill ph-warning" aria-hidden="true"></i><span>El ejecutable no está firmado: Windows puede mostrar un aviso. Pulsa <strong>Más información → Ejecutar de todas formas</strong>.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="wrap narrow">
+        <h2>Preguntas frecuentes</h2>
+        <details class="reveal"><summary>¿Se envían mis audios a algún servidor?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>No. La transcripción se hace en tu equipo. Solo se descarga el modelo la primera vez que lo eliges.</p></details>
+        <details class="reveal"><summary>¿Windows bloquea el archivo o muestra un aviso?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>Al no estar firmado digitalmente, SmartScreen puede avisarte. Comprueba que el SHA-256 coincide con el de esta página. Si una directiva de «Control de aplicaciones» lo bloquea, consulta la sección de solución de problemas del README.</p></details>
+        <details class="reveal"><summary>¿Qué modelo me conviene?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>Empieza con <code>small</code>. Si necesitas más precisión usa <code>large-v3</code> (más pesado) o <code>turbo</code> (casi igual de preciso y más rápido).</p></details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot-in">
+      <p>© <span id="year">2026</span> IngSystemCix · Hecho con faster-whisper, Tkinter e iconos de <a href="https://phosphoricons.com/" rel="noopener">Phosphor</a>.</p>
+      <p><a href="https://github.com/IngSystemCix/transcriptor/issues" data-issues>Reportar un problema</a></p>
+    </div>
+  </footer>
+</body>
+</html>

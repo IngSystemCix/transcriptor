@@ -1,0 +1,15 @@
+[project]
+name = "transcriptor"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "faster-whisper>=1.2.1",
+    "pillow>=12.3.0",
+]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.22.3",
+]
