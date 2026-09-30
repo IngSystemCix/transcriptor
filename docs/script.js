@@ -1,13 +1,20 @@
 "use strict";
 
-/* ── Configuración: cambia solo esto si renombras el repositorio ── */
 const CONFIG = { owner: "IngSystemCix", repo: "transcriptor" };
 
-/* Cómo reconocer, dentro de la Release, el archivo de cada sistema (ver deploy.yaml) */
 const PLATFORMS = {
-  windows: { label: "Windows", pattern: /\.exe$/i },
-  macos: { label: "macOS", pattern: /macos.*\.zip$/i },
-  linux: { label: "Linux", pattern: /linux.*\.tar\.gz$/i },
+  windows: {
+    label: "Windows",
+    patterns: [/\.exe$/i, /windows.*\.exe$/i, /transcriptor.*\.exe$/i],
+  },
+  macos: {
+    label: "macOS",
+    patterns: [/macos.*\.zip$/i, /darwin.*\.zip$/i, /transcriptor.*\.zip$/i],
+  },
+  linux: {
+    label: "Linux",
+    patterns: [/linux.*\.tar\.gz$/i, /ubuntu.*\.tar\.gz$/i, /transcriptor.*\.tar\.gz$/i],
+  },
 };
 
 const REPO = `https://github.com/${CONFIG.owner}/${CONFIG.repo}`;
@@ -16,23 +23,22 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
 document.documentElement.classList.add("js");
 
-/* Enlaces al repositorio (una sola fuente de verdad) */
 $$("[data-repo]").forEach((a) => (a.href = REPO));
 $$("[data-releases]").forEach((a) => (a.href = `${REPO}/releases`));
 $$("[data-issues]").forEach((a) => (a.href = `${REPO}/issues`));
 $$("[data-dl]").forEach((a) => (a.href = `${REPO}/releases/latest`));
 $("#year").textContent = new Date().getFullYear();
 
-/* Sistema del visitante */
 function detectOS() {
   const ua = navigator.userAgent;
   const all = `${ua} ${navigator.userAgentData?.platform ?? navigator.platform ?? ""}`;
-  if (/iPhone|iPad|Android/i.test(ua)) return null; // móviles: no hay versión
+  if (/iPhone|iPad|Android/i.test(ua)) return null;
   if (/Win/i.test(all)) return "windows";
   if (/Mac/i.test(all)) return "macos";
   if (/Linux|X11/i.test(all)) return "linux";
   return null;
 }
+
 const os = detectOS();
 const heroBtn = $("[data-hero-download]");
 if (os) {
@@ -42,7 +48,6 @@ if (os) {
   $(".badge", card).hidden = false;
 }
 
-/* Menú móvil */
 const burger = $(".burger");
 const nav = $("#nav");
 const closeNav = () => {
@@ -50,6 +55,7 @@ const closeNav = () => {
   burger.setAttribute("aria-expanded", "false");
   burger.setAttribute("aria-label", "Abrir menú");
 };
+
 burger.addEventListener("click", () => {
   const open = nav.classList.toggle("open");
   burger.setAttribute("aria-expanded", String(open));
@@ -58,7 +64,6 @@ burger.addEventListener("click", () => {
 nav.addEventListener("click", (e) => e.target.closest("a") && closeNav());
 document.addEventListener("keydown", (e) => e.key === "Escape" && closeNav());
 
-/* Aparición al hacer scroll */
 const items = $$(".reveal");
 if ("IntersectionObserver" in window) {
   const io = new IntersectionObserver(
@@ -76,8 +81,12 @@ if ("IntersectionObserver" in window) {
   items.forEach((el) => el.classList.add("in"));
 }
 
-/* Última release desde la API de GitHub (con caché de sesión) */
 const fmtSize = (bytes) => `${(bytes / 1_048_576).toFixed(0)} MB`;
+
+function findAsset(assets, platformId) {
+  const { patterns } = PLATFORMS[platformId];
+  return assets.find((asset) => patterns.some((pattern) => pattern.test(asset.name)));
+}
 
 async function getRelease() {
   const key = "transcriptor-release";
@@ -85,17 +94,19 @@ async function getRelease() {
     const cached = JSON.parse(sessionStorage.getItem(key));
     if (cached) return cached;
   } catch {
-    /* sin caché disponible */
+    // Sin caché disponible.
   }
+
   const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/releases/latest`, {
     headers: { Accept: "application/vnd.github+json" },
   });
   if (!res.ok) throw new Error(`GitHub API ${res.status}`);
   const data = await res.json();
+
   try {
     sessionStorage.setItem(key, JSON.stringify(data));
   } catch {
-    /* ignorar */
+    // Ignorar si localStorage no está disponible.
   }
   return data;
 }
@@ -104,45 +115,52 @@ function markUnavailable(btn) {
   btn.removeAttribute("href");
   btn.setAttribute("aria-disabled", "true");
   btn.classList.add("is-disabled");
-  $("span", btn).textContent = "No disponible en esta versión";
+  const label = $("span", btn);
+  if (label) label.textContent = "No disponible";
 }
 
 async function loadRelease() {
   try {
     const rel = await getRelease();
-    $$("[data-version]").forEach((el) => (el.textContent = rel.tag_name));
+    $$('[data-version]').forEach((el) => {
+      el.textContent = rel.tag_name || "Última versión";
+    });
 
-    for (const [id, { pattern }] of Object.entries(PLATFORMS)) {
-      const card = $(`[data-platform="${id}"]`);
+    for (const platformId of Object.keys(PLATFORMS)) {
+      const card = $(`[data-platform="${platformId}"]`);
       const btn = $("[data-dl]", card);
-      const asset = rel.assets.find((a) => pattern.test(a.name));
+      const asset = findAsset(rel.assets || [], platformId);
+
       if (!asset) {
         markUnavailable(btn);
         continue;
       }
+
       btn.href = asset.browser_download_url;
-      $("[data-size]", card).textContent = fmtSize(asset.size);
-      const hash = asset.digest?.replace(/^sha256:/, "");
-      if (hash) {
-        const copy = $("[data-copy]", card);
+      $("[data-size]", card).textContent = fmtSize(asset.size || 0);
+
+      const hash = (asset.digest || "").replace(/^sha256:/i, "");
+      const copy = $("[data-copy]", card);
+      if (hash && copy) {
         copy.dataset.hash = hash;
         copy.hidden = false;
       }
-      if (id === os) heroBtn.href = asset.browser_download_url;
+
+      if (platformId === os) heroBtn.href = asset.browser_download_url;
     }
   } catch {
-    /* Sin conexión o límite de la API: se mantienen los enlaces a /releases/latest */
+    // Si la API falla, se mantienen los enlaces generales a la página de releases.
   }
 }
+
 loadRelease();
 
-/* Botón principal sin versión disponible: lleva a la sección de descargas */
 heroBtn.addEventListener("click", () => closeNav());
 
-/* Copiar SHA-256 */
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-copy]");
-  if (!btn) return;
+  if (!btn || !btn.dataset.hash) return;
+
   const status = $("#copy-status");
   try {
     await navigator.clipboard.writeText(btn.dataset.hash);

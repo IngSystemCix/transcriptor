@@ -12,6 +12,7 @@ a{color:var(--accent-l)}
 code{background:var(--surface-2);padding:.1em .45em;border-radius:6px;font-size:.9em}
 h1,h2,h3{line-height:1.15;margin:0}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+body{min-height:100vh}
 .wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
 .narrow{width:min(760px,100% - 2.5rem)}
 .skip{position:absolute;left:1rem;top:-4rem;background:var(--focus);color:#000;padding:.7rem 1rem;border-radius:8px;z-index:100;font-weight:600}
@@ -85,6 +86,7 @@ h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:800;letter-spacing:-.03em}
 .plat.rec{border-color:var(--accent);box-shadow:0 20px 60px -20px rgba(37,99,235,.55)}
 .badge{position:absolute;top:-14px;left:1.4rem;display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .8rem;border-radius:999px;background:var(--accent);color:#fff;font-size:.82rem;font-weight:600}
 .plat-ico{font-size:2.8rem;color:var(--accent-l);line-height:1}
+.plat .hash-btn[hidden]{display:none}
 .plat h3{font-size:1.3rem}
 .plat-meta{margin:-.5rem 0 0;color:var(--muted);font-size:.92rem}
 .plat .btn{width:100%}
