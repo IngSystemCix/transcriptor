@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/duotone/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
@@ -48,8 +49,8 @@
           <h1>Convierte audio en texto, <span class="grad">sin salir de tu equipo</span></h1>
           <p class="lead">Transcribe grabaciones, reuniones y videos con modelos Whisper que se ejecutan en tu computadora. Exporta a TXT o subtítulos SRT en un clic.</p>
           <div class="cta">
-            <a class="btn btn-primary" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-download>
-              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>Descargar para Windows
+            <a class="btn btn-primary" href="#descargar" data-hero-download>
+              <i class="ph-bold ph-download-simple" aria-hidden="true"></i><span data-os-label>Descargar</span>
             </a>
             <a class="btn btn-ghost" href="https://github.com/IngSystemCix/transcriptor" data-repo>
               <i class="ph-bold ph-github-logo" aria-hidden="true"></i>Ver código
@@ -57,10 +58,9 @@
           </div>
           <ul class="chips" aria-label="Detalles de la última versión">
             <li><i class="ph ph-tag" aria-hidden="true"></i><span data-version>Última versión</span></li>
-            <li><i class="ph ph-hard-drives" aria-hidden="true"></i><span data-size>Ejecutable portable</span></li>
-            <li><i class="ph ph-windows-logo" aria-hidden="true"></i>Windows 64 bits</li>
+            <li><i class="ph ph-hard-drives" aria-hidden="true"></i>Sin instalación</li>
+            <li><i class="ph ph-desktop" aria-hidden="true"></i>Windows, macOS y Linux</li>
           </ul>
-          <p class="os-note" id="os-note" hidden><i class="ph-fill ph-info" aria-hidden="true"></i>Este ejecutable es para Windows. En otros sistemas, ejecútalo desde el código (instrucciones en el repositorio).</p>
         </div>
 
         <div class="mock" role="img" aria-label="Vista previa de la aplicación transcribiendo un audio">
@@ -95,37 +95,40 @@
 
     <section id="descargar" class="section">
       <div class="wrap">
-        <div class="dl reveal">
-          <div>
-            <h2>Descarga Transcriptor</h2>
-            <p class="sub">Un solo archivo <code>.exe</code>, sin instalación.</p>
-            <a class="btn btn-primary btn-lg" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-download>
-              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>Descargar <span data-version>última versión</span>
-            </a>
-            <a class="link" href="https://github.com/IngSystemCix/transcriptor/releases" data-releases>
-              Ver todas las versiones<i class="ph-bold ph-arrow-square-out" aria-hidden="true"></i>
-            </a>
-            <dl class="facts">
-              <div><dt><i class="ph ph-calendar-blank" aria-hidden="true"></i>Publicada</dt><dd data-date>—</dd></div>
-              <div><dt><i class="ph ph-hard-drives" aria-hidden="true"></i>Tamaño</dt><dd data-size>—</dd></div>
-              <div id="downloads-item" hidden><dt><i class="ph ph-download" aria-hidden="true"></i>Descargas</dt><dd data-downloads>—</dd></div>
-            </dl>
-            <div class="hash" id="hash-row" hidden>
-              <span>SHA-256</span><code data-hash></code>
-              <button type="button" id="copy-hash" aria-label="Copiar SHA-256"><i class="ph-bold ph-copy" aria-hidden="true"></i></button>
-            </div>
-            <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
-          </div>
-          <div class="req">
-            <h3>Requisitos</h3>
-            <ul>
-              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Windows de 64 bits</li>
-              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Internet la primera vez que uses cada modelo</li>
-              <li><i class="ph-fill ph-check-circle" aria-hidden="true"></i>GPU NVIDIA opcional (CUDA)</li>
-            </ul>
-            <p class="warn"><i class="ph-fill ph-warning" aria-hidden="true"></i><span>El ejecutable no está firmado: Windows puede mostrar un aviso. Pulsa <strong>Más información → Ejecutar de todas formas</strong>.</span></p>
-          </div>
+        <h2>Descarga Transcriptor</h2>
+        <p class="sub">Un solo archivo por sistema, sin instalación. Versión <span data-version>más reciente</span>.</p>
+        <div class="platforms">
+          <article class="plat reveal" data-platform="windows">
+            <span class="badge" hidden><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Recomendado para tu sistema</span>
+            <i class="ph-duotone ph-windows-logo plat-ico" aria-hidden="true"></i>
+            <h3>Windows</h3>
+            <p class="plat-meta">64 bits · <span data-size>.exe</span></p>
+            <a class="btn btn-primary" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-dl><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Descargar .exe</span></a>
+            <p class="plat-note"><i class="ph-fill ph-warning" aria-hidden="true"></i><span>Si SmartScreen avisa: <strong>Más información → Ejecutar de todas formas</strong>.</span></p>
+            <button class="hash-btn" type="button" data-copy hidden><i class="ph-bold ph-copy" aria-hidden="true"></i>Copiar SHA-256</button>
+          </article>
+          <article class="plat reveal" data-platform="macos">
+            <span class="badge" hidden><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Recomendado para tu sistema</span>
+            <i class="ph-duotone ph-apple-logo plat-ico" aria-hidden="true"></i>
+            <h3>macOS</h3>
+            <p class="plat-meta">Apple Silicon (M1 o superior) · <span data-size>.zip</span></p>
+            <a class="btn btn-primary" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-dl><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Descargar .zip</span></a>
+            <p class="plat-note"><i class="ph-fill ph-warning" aria-hidden="true"></i><span>La primera vez, clic derecho → <strong>Abrir</strong> (app sin notarizar).</span></p>
+            <button class="hash-btn" type="button" data-copy hidden><i class="ph-bold ph-copy" aria-hidden="true"></i>Copiar SHA-256</button>
+          </article>
+          <article class="plat reveal" data-platform="linux">
+            <span class="badge" hidden><i class="ph-fill ph-check-circle" aria-hidden="true"></i>Recomendado para tu sistema</span>
+            <i class="ph-duotone ph-linux-logo plat-ico" aria-hidden="true"></i>
+            <h3>Linux</h3>
+            <p class="plat-meta">x86_64 · <span data-size>.tar.gz</span></p>
+            <a class="btn btn-primary" href="https://github.com/IngSystemCix/transcriptor/releases/latest" data-dl><i class="ph-bold ph-download-simple" aria-hidden="true"></i><span>Descargar .tar.gz</span></a>
+            <p class="plat-note"><i class="ph-fill ph-info" aria-hidden="true"></i><span>Extrae con <code>tar -xzf</code> y ejecuta <code>./Transcriptor</code>.</span></p>
+            <button class="hash-btn" type="button" data-copy hidden><i class="ph-bold ph-copy" aria-hidden="true"></i>Copiar SHA-256</button>
+          </article>
         </div>
+        <p class="req-line"><i class="ph ph-info" aria-hidden="true"></i>Internet solo la primera vez que uses cada modelo · GPU NVIDIA opcional.
+          <a class="link" href="https://github.com/IngSystemCix/transcriptor/releases" data-releases>Todas las versiones<i class="ph-bold ph-arrow-square-out" aria-hidden="true"></i></a></p>
+        <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
       </div>
     </section>
 
@@ -135,6 +138,7 @@
         <details class="reveal"><summary>¿Se envían mis audios a algún servidor?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>No. La transcripción se hace en tu equipo. Solo se descarga el modelo la primera vez que lo eliges.</p></details>
         <details class="reveal"><summary>¿Windows bloquea el archivo o muestra un aviso?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>Al no estar firmado digitalmente, SmartScreen puede avisarte. Comprueba que el SHA-256 coincide con el de esta página. Si una directiva de «Control de aplicaciones» lo bloquea, consulta la sección de solución de problemas del README.</p></details>
         <details class="reveal"><summary>¿Qué modelo me conviene?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>Empieza con <code>small</code>. Si necesitas más precisión usa <code>large-v3</code> (más pesado) o <code>turbo</code> (casi igual de preciso y más rápido).</p></details>
+        <details class="reveal"><summary>¿Cómo lo abro en macOS o Linux?<i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary><p>En macOS, descomprime el .zip y abre la app con clic derecho → Abrir la primera vez, porque no está notarizada. En Linux, extrae con <code>tar -xzf Transcriptor-linux-x86_64.tar.gz</code> y ejecuta <code>./Transcriptor</code>.</p></details>
       </div>
     </section>
   </main>

@@ -1,100 +1,152 @@
-# Transcriptor de audio
+# Transcriptor
 
-Aplicación de escritorio para convertir audio y video en texto **sin conexión**, con [faster-whisper](https://github.com/SYSTRAN/faster-whisper) e interfaz en Tkinter.
+Aplicación de escritorio para transcribir audio y video en texto de forma local, sin depender de servicios externos. Está desarrollada con Python, Tkinter y [faster-whisper](https://github.com/SYSTRAN/faster-whisper), y permite trabajar directamente desde el equipo del usuario.
 
-## Características
+## ¿Qué hace?
 
-- Transcripción local (tus archivos no salen de tu equipo).
-- Modelos `tiny`, `base`, `small`, `medium`, `large-v3` y `turbo`.
-- Detección automática de idioma o selección manual (ES, EN, PT, FR, DE, IT).
-- Resultado en vivo, segmento a segmento, con marcas de tiempo opcionales.
-- Filtro de silencios (VAD) y selección de dispositivo (Automático, CPU, GPU CUDA).
-- Cancelación en cualquier momento.
-- Exporta a **TXT** y **SRT** (subtítulos) o copia al portapapeles.
-- Interfaz oscura accesible: contraste WCAG AA, anillos de foco visibles, botones de 44 px, estado con icono + color + texto y atajos de teclado.
+- Convierte archivos de audio y video en texto localmente.
+- Soporta modelos `tiny`, `base`, `small`, `medium`, `large-v3` y `turbo`.
+- Detecta el idioma automáticamente o permite seleccionarlo manualmente.
+- Muestra resultados por segmentos y permite activar marcas de tiempo.
+- Incluye filtro de silencios (VAD) y selección de dispositivo (`auto`, `cpu`, `cuda`).
+- Exporta a TXT y SRT y permite copiar el texto al portapapeles.
+- Tiene una interfaz oscura, accesible y pensada para uso local.
 
 ## Formatos admitidos
 
-MP3, WAV, M4A, FLAC, OGG, OPUS, AAC, WMA, MP4, MKV, WEBM.
+- Audio: MP3, WAV, M4A, FLAC, OGG, OPUS, AAC, WMA
+- Video: MP4, MKV, WEBM
+
+## Requisitos
+
+- Python 3.11 o superior (recomendado 3.12)
+- [uv](https://docs.astral.sh/uv/)
+- Windows, Linux o macOS
+
+En Linux, si Tkinter no está instalado, puede ser necesario ejecutar:
+
+```bash
+sudo apt install python3-tk
+```
+
+## Instalación
+
+1. Clona el repositorio:
+
+```bash
+git clone <url-del-repositorio>
+cd transcriptor
+```
+
+2. Instala las dependencias del proyecto:
+
+```powershell
+uv python install 3.12
+uv python pin 3.12
+uv sync
+```
+
+Si quieres configurarlo manualmente:
+
+```powershell
+uv add faster-whisper pillow
+```
+
+## Uso
+
+Lanza la app con:
+
+```powershell
+uv run main.py
+```
+
+Desde la interfaz puedes:
+
+- abrir un archivo de audio o video,
+- elegir modelo, idioma y dispositivo,
+- activar o desactivar VAD,
+- iniciar la transcripción,
+- guardar el resultado en TXT o SRT.
 
 ## Atajos de teclado
 
 | Atajo | Acción |
 |---|---|
-| `Ctrl+O` | Seleccionar archivo |
-| `Ctrl+Enter` | Transcribir |
+| `Ctrl+O` | Abrir archivo |
+| `Ctrl+Enter` | Iniciar transcripción |
 | `Esc` | Cancelar |
 | `Ctrl+S` | Guardar como TXT |
 
-## Ejecutar desde el código
+## Compilar a ejecutable
 
-Requisitos: [uv](https://docs.astral.sh/uv/) y Python 3.11 o superior (recomendado 3.12; `onnxruntime` ya no publica ruedas para 3.10).
-
-```powershell
-uv python install 3.12
-uv python pin 3.12
-uv add faster-whisper pillow
-uv run main.py
-```
-
-En Linux con Python del sistema, instala también Tkinter: `sudo apt install python3-tk`.
-
-## Compilar a un `.exe`
+El proyecto incluye un script de empaquetado con PyInstaller:
 
 ```powershell
 uv add --dev pyinstaller
 uv run build.py
 ```
 
-El resultado queda en `dist/Transcriptor.exe`.
+Genera un ejecutable en `dist/Transcriptor.exe`.
+
+### Variantes de compilación
 
 | Comando | Resultado |
 |---|---|
-| `uv run build.py` | Un solo `.exe` (más simple de distribuir, arranque más lento porque se extrae a una carpeta temporal) |
-| `uv run build.py --onedir` | Carpeta `dist/Transcriptor/` (arranque rápido, más fiable con antivirus y políticas de Windows) |
-| `uv run build.py --with-ffmpeg` | Incrusta `ffmpeg.exe` (ver «Control de aplicaciones»). Añade unos 100 MB o más |
+| `uv run build.py` | Un único `.exe` |
+| `uv run build.py --onedir` | Carpeta `dist/Transcriptor/` |
+| `uv run build.py --with-ffmpeg` | Incluye `ffmpeg.exe` dentro del paquete |
 
-Notas:
+## Observaciones importantes
 
-- El `.exe` pesa varios cientos de MB porque incluye el motor de inferencia y sus librerías. Es normal.
-- Los **modelos no van dentro del `.exe`**: se descargan la primera vez que se usa cada uno (necesita internet) y se guardan en `%USERPROFILE%\.cache\huggingface`. Después funciona sin conexión.
-- El `.exe` no está firmado digitalmente. Windows SmartScreen o tu antivirus pueden mostrar avisos o marcarlo como falso positivo (algo habitual en ejecutables de PyInstaller).
+- Los modelos de Whisper no se empaquetan dentro del ejecutable; se descargan la primera vez que se usan.
+- El ejecutable puede ser grande porque incluye el motor de inferencia y sus dependencias.
+- En Windows es habitual que aparezca un aviso de SmartScreen o antivirus por ser un binario no firmado.
 
 ## Solución de problemas
 
-### «Una directiva de Control de aplicaciones bloqueó este archivo»
+### PyAV bloqueado por Windows
 
-Windows (Smart App Control, WDAC o AppLocker) bloquea una DLL sin firma, normalmente la de PyAV (`av`). La aplicación lo detecta y decodifica el audio con `ffmpeg.exe` en su lugar:
+Si la DLL de PyAV está bloqueada, la app detecta este caso y usa `ffmpeg` para decodificar el audio.
 
-1. Instala ffmpeg: `winget install Gyan.FFmpeg` y reabre la terminal (o compila con `--with-ffmpeg`).
-2. Comprueba que funciona: `ffmpeg -version`.
+Instala FFmpeg:
 
-Si `ffmpeg.exe` o el propio `.exe` también son bloqueados, la política del equipo rechaza todo binario sin firma. Opciones: pedir una excepción al administrador de TI, firmar el ejecutable con un certificado de firma de código, o ejecutar la aplicación desde el código dentro de WSL2.
+```powershell
+winget install Gyan.FFmpeg
+```
+
+Compruébalo con:
+
+```powershell
+ffmpeg -version
+```
 
 ### Error con GPU (CUDA)
 
-Cambia el dispositivo a **CPU**. Para usar GPU necesitas los controladores NVIDIA y las librerías cuBLAS y cuDNN compatibles con CTranslate2.
+Si falla la GPU, cambia el dispositivo a `CPU` desde la interfaz. Para usar CUDA necesitas drivers NVIDIA compatibles y librerías de CTranslate2.
 
 ### `No se encontró ffmpeg en el PATH`
 
-Solo aparece cuando PyAV no puede cargarse. Instala ffmpeg como se indica arriba.
+Instala FFmpeg o compila con `--with-ffmpeg`.
 
 ### La primera transcripción tarda mucho
 
-Se está descargando el modelo. Los modelos grandes (`medium`, `large-v3`) pesan varios GB. Para empezar, usa `small`.
-
-### En macOS los botones no tienen color
-
-`tk.Button` ignora los colores de fondo en macOS y usa el estilo nativo. En Windows y Linux se ve como está diseñado.
+Es normal: la primera vez que se usa un modelo, este se descarga y se prepara. Los modelos grandes pueden tardar más.
 
 ## Estructura del proyecto
 
-```
+```text
 transcriptor/
-├── main.py        # Aplicación completa (utilidades, iconos, worker, UI)
-├── build.py       # Script de compilación a .exe (PyInstaller)
+├── main.py
+├── build.py
 ├── pyproject.toml
-└── README.md
+├── README.md
+├── LICENSE
+├── Transcriptor.spec
+└── docs/
 ```
 
-`main.py` se organiza en capas: utilidades de formato → iconos PNG generados con Pillow → `Worker` (hilo que se comunica por `queue.Queue`) → widgets propios → `App`.
+La lógica principal está en `main.py`, donde se separan las utilidades, la generación de iconos, el worker de transcripción y la interfaz de usuario.
+
+## Licencia
+
+Este proyecto está protegido por una licencia de derechos reservados. No está permitido copiar, redistribuir, modificar, reutilizar ni comercializar el código sin autorización previa por escrito del titular de los derechos. Consulta [LICENSE](LICENSE) para más detalles.
